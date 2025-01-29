@@ -1,14 +1,17 @@
 import React, { useEffect, useState } from "react";
-import ".././styles/CallList.css";
+import ".././styles/callList.css";
 import incomingIcon from "../assets/incomingCall.svg";
 import outgoingIcon from "../assets/outgoingCall.svg";
+import axios from "axios";
 
 const API_URL = "https://api.skilla.ru/mango/getList";
+const RECORD_API_URL = "https://api.skilla.ru/mango/getRecord";
 const TOKEN = "testtoken";
 
 const CallList = () => {
   const [calls, setCalls] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [audioUrls, setAudioUrls] = useState({});
 
   useEffect(() => {
     fetch(API_URL, {
@@ -19,15 +22,33 @@ const CallList = () => {
       },
     })
       .then((response) => response.json())
-      .then((data) => {
-        console.log(data);
+      .then(async (data) => {
         if (data.results) {
           setCalls(
-            data.results.map((call) => ({
-              ...call,
-              rating: getRandomRating(),
-            }))
+            data.results.map((call) => ({ ...call, rating: getRandomRating() }))
           );
+          const audioMap = {};
+          for (const call of data.results) {
+            if (call.record) {
+              try {
+                const response = await axios.post(
+                  `${RECORD_API_URL}?record=${call.record}&partnershipId=${call.partnership_id}`,
+                  {},
+                  {
+                    headers: {
+                      Authorization: `Bearer ${TOKEN}`,
+                      "Content-Type": "application/json",
+                    },
+                    responseType: "blob",
+                  }
+                );
+                audioMap[call.id] = URL.createObjectURL(response.data);
+              } catch (error) {
+                console.error("Ошибка загрузки аудиозаписи:", error);
+              }
+            }
+          }
+          setAudioUrls(audioMap);
         }
         setLoading(false);
       })
@@ -62,18 +83,32 @@ const CallList = () => {
                 className="call-icon"
               />
             </td>
-            <td>{new Date(call.date).toLocaleTimeString()}</td>
+            <td>
+              {new Date(call.date).toLocaleTimeString([], {
+                hour: "2-digit",
+                minute: "2-digit",
+              })}
+            </td>
             <td>
               <img src={call.person_avatar} alt="Аватар" className="avatar" />
             </td>
-            <td>{call.from_number}</td>
-            <td>{call.source}</td>
+            <td>{call.partner_data.phone}</td>
+            <td>{call.partner_data.name}</td>
             <td>
               <span className={`rating ${getRatingClass(call.rating)}`}>
                 {call.rating}
               </span>
             </td>
-            <td>{formatDuration(call.time)}</td>
+            <td>
+              {audioUrls[call.id] ? (
+                <audio controls>
+                  <source src={audioUrls[call.id]} type="audio/mpeg" />
+                  Ваш браузер не поддерживает аудиоэлемент.
+                </audio>
+              ) : (
+                formatDuration(call.time)
+              )}
+            </td>
           </tr>
         ))}
       </tbody>
