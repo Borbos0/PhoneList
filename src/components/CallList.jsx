@@ -58,7 +58,14 @@ const CallList = () => {
       });
   }, []);
 
-  if (loading) return <p>Загрузка звонков...</p>;
+  if (loading) {
+    return (
+      <div className="loader-container">
+        <div className="loader"></div>
+        <p>Загрузка звонков...</p>
+      </div>
+    );
+  }
 
   return (
     <table className="calls-table">
