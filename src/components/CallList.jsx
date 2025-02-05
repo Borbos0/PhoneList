@@ -11,6 +11,7 @@ const TOKEN = "testtoken";
 const CallList = () => {
   const [calls, setCalls] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [filterType, setFilterType] = useState("all");
   const [audioUrls, setAudioUrls] = useState({});
 
   useEffect(() => {
@@ -27,6 +28,7 @@ const CallList = () => {
           setCalls(
             data.results.map((call) => ({ ...call, rating: getRandomRating() }))
           );
+
           const audioMap = {};
           for (const call of data.results) {
             if (call.record) {
@@ -58,68 +60,81 @@ const CallList = () => {
       });
   }, []);
 
-  if (loading) {
-    return (
-      <div className="loader-container">
-        <div className="loader"></div>
-        <p>Загрузка звонков...</p>
-      </div>
-    );
-  }
+  const filteredCalls =
+    filterType === "all"
+      ? calls
+      : calls.filter(
+          (call) => call.in_out === (filterType === "incoming" ? 1 : 0)
+        );
+
+  if (loading) return <p className="loading">Загрузка звонков...</p>;
+  if (!filteredCalls.length) return <p className="no-data">Нет данных</p>;
 
   return (
-    <table className="calls-table">
-      <thead>
-        <tr>
-          <th>Тип</th>
-          <th>Время</th>
-          <th>Сотрудник</th>
-          <th>Звонок</th>
-          <th>Источник</th>
-          <th>Оценка</th>
-          <th>Длительность</th>
-        </tr>
-      </thead>
-      <tbody>
-        {calls.map((call) => (
-          <tr key={call.id}>
-            <td>
-              <img
-                src={call.in_out === 1 ? incomingIcon : outgoingIcon}
-                alt={call.in_out === 1 ? "Входящий" : "Исходящий"}
-                className="call-icon"
-              />
-            </td>
-            <td>
-              {new Date(call.date).toLocaleTimeString([], {
-                hour: "2-digit",
-                minute: "2-digit",
-              })}
-            </td>
-            <td>
-              <img src={call.person_avatar} alt="Аватар" className="avatar" />
-            </td>
-            <td>{call.partner_data.phone}</td>
-            <td>{call.partner_data.name}</td>
-            <td>
-              <span className={`rating ${getRatingClass(call.rating)}`}>
-                {call.rating}
-              </span>
-            </td>
-            <td>
-              {audioUrls[call.id] ? (
-                <audio controls>
-                  <source src={audioUrls[call.id]} type="audio/mpeg" />
-                  Ваш браузер не поддерживает аудиоэлемент.
-                </audio>
-              ) : (
-                formatDuration(call.time)
-              )}
-            </td>
+    <div className="container">
+      <div className="filters">
+        <select
+          value={filterType}
+          onChange={(e) => setFilterType(e.target.value)}
+        >
+          <option value="all">Все типы</option>
+          <option value="incoming">Входящие</option>
+          <option value="outgoing">Исходящие</option>
+        </select>
+      </div>
+      <table className="calls-table">
+        <thead>
+          <tr>
+            <th>Тип</th>
+            <th>Время</th>
+            <th>Сотрудник</th>
+            <th>Звонок</th>
+            <th>Источник</th>
+            <th>Оценка</th>
+            <th>Длительность</th>
           </tr>
-        ))}
-      </tbody>
-    </table>
+        </thead>
+        <tbody>
+          {filteredCalls.map((call) => (
+            <tr key={call.id}>
+              <td>
+                <img
+                  src={call.in_out === 1 ? incomingIcon : outgoingIcon}
+                  alt={call.in_out === 1 ? "Входящий" : "Исходящий"}
+                  className="call-icon"
+                />
+              </td>
+              <td>
+                {new Date(call.date).toLocaleTimeString([], {
+                  hour: "2-digit",
+                  minute: "2-digit",
+                })}
+              </td>
+              <td>
+                <img src={call.person_avatar} alt="Аватар" className="avatar" />
+              </td>
+              <td>{call.partner_data.phone}</td>
+              <td>{call.partner_data.name}</td>
+              <td>
+                <span className={`rating ${getRatingClass(call.rating)}`}>
+                  {call.rating}
+                </span>
+              </td>
+              <td>
+                {audioUrls[call.id] ? (
+                  <audio controls>
+                    <source src={audioUrls[call.id]} type="audio/mpeg" />
+                    Ваш браузер не поддерживает аудиоэлемент.
+                  </audio>
+                ) : (
+                  formatDuration(call.time)
+                )}
+              </td>
+            </tr>
+          ))}
+        </tbody>
+      </table>
+    </div>
   );
 };
 

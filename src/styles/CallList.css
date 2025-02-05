@@ -24,6 +24,13 @@
     transform: rotate(360deg);
   }
 }
+.no-data {
+  text-align: center;
+  font-size: 18px;
+  font-weight: bold;
+  color: #555;
+  margin-top: 20px;
+}
 
 .calls-table {
   width: 95%;
