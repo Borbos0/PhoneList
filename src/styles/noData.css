@@ -1,0 +1,11 @@
+.no-data {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 1.5rem;
+    padding: 20px;
+  }
+  .no-data p {
+    color: #777;
+  }
+  

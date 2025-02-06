@@ -9,6 +9,9 @@ import {
   formatDuration,
 } from "./utils/utils";
 import useCallsData from "./hooks/useCallsData";
+import LoadingSpinner from "./common/Loader";
+import NoData from "./common/NoData";
+import arrowIcon from "../assets/markdown.svg";
 
 const CallList = () => {
   const { calls, loading, audioUrls } = useCallsData();
@@ -20,15 +23,18 @@ const CallList = () => {
     { label: "Исходящие", value: "outgoing" },
   ];
 
-  const filteredCalls =
-    filterType === "all"
-      ? calls
-      : calls.filter(
-          (call) => call.in_out === (filterType === "incoming" ? 1 : 0)
-        );
+  const filteredCalls = calls.filter((call) => {
+    let filterCondition = true;
 
-  if (loading) return <p className="loading">Загрузка звонков...</p>;
-  if (!filteredCalls.length) return <p className="no-data">Нет данных</p>;
+    return (
+      filterCondition &&
+      (filterType === "all" ||
+        call.in_out === (filterType === "incoming" ? 1 : 0))
+    );
+  });
+
+  if (loading) return <LoadingSpinner />;
+  if (!filteredCalls.length) return <NoData />;
 
   return (
     <div className="container">
@@ -47,12 +53,17 @@ const CallList = () => {
           <thead>
             <tr>
               <th>Тип</th>
-              <th>Время</th>
+              <th>
+                Время <img src={arrowIcon} alt="arrow" className="arrow" />
+              </th>
               <th>Сотрудник</th>
               <th>Звонок</th>
               <th>Источник</th>
               <th>Оценка</th>
-              <th>Длительность</th>
+              <th>
+                Длительность{" "}
+                <img src={arrowIcon} alt="arrow" className="arrow" />
+              </th>
             </tr>
           </thead>
           <tbody>
@@ -79,7 +90,7 @@ const CallList = () => {
                   />
                 </td>
                 <td>{formatPhoneNumber(call.partner_data.phone)}</td>
-                <td>{call.partner_data.name}</td>
+                <td className="name-partner">{call.partner_data.name}</td>
                 <td>
                   <span className={`rating ${getRatingClass(call.rating)}`}>
                     {call.rating}

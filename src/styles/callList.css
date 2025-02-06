@@ -1,18 +1,7 @@
-.loading {
-  font-size: 1.5rem;
-  padding: 1.5rem;
-}
 .container {
   margin: 1.5rem 0 0 2.5rem;
 }
 
-.no-data {
-  text-align: center;
-  font-size: 1.5rem;
-  font-weight: bold;
-  color: #555;
-  padding-top: 24px;
-}
 .table {
   padding: 24px 40px 24px 40px;
   margin-top: 1rem;
@@ -27,12 +16,17 @@
   border-collapse: collapse;
   background-color: white;
   overflow: hidden;
-  font-size: 0.875rem;
   color: #333;
 }
-
+.arrow {
+  padding-left: 4px;
+}
 .calls-table thead {
   text-align: left;
+}
+.calls-table thead tr th {
+  font-size: 14px;
+  font-weight: 400 !important;
 }
 .calls-table td:last-child,
 .calls-table th:last-child {
@@ -41,6 +35,9 @@
 }
 tbody tr {
   height: 4.125rem;
+}
+.name-partner {
+  color: #5E7793;
 }
 audio {
   height: 3rem;

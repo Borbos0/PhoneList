@@ -12,7 +12,6 @@ const useCallsData = () => {
   const [audioUrls, setAudioUrls] = useState({});
 
   useEffect(() => {
-    // Загрузка списка звонков с использованием axios
     axios
       .post(
         API_URL,
@@ -27,7 +26,6 @@ const useCallsData = () => {
       .then(async (response) => {
         const data = response.data;
         if (data.results) {
-          // Добавление случайного рейтинга
           setCalls(
             data.results.map((call) => ({
               ...call,
