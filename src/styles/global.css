@@ -5,6 +5,7 @@
 }
 body {
     font-family: var(--font-family);
+    background-color: #F1F4F9;
 }
 :root {
     --font-family: "SF Pro Display";

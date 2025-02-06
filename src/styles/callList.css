@@ -1,43 +1,31 @@
-.loader-container {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  height: 100vh;
+.loading {
+  font-size: 1.5rem;
+  padding: 1.5rem;
+}
+.container {
+  margin: 1.5rem 0 0 2.5rem;
 }
 
-.loader {
-  width: 50px;
-  height: 50px;
-  border: 5px solid rgba(0, 0, 0, 0.1);
-  border-top-color: #3498db;
-  border-radius: 50%;
-  animation: spin 1s linear infinite;
-  margin-bottom: 10px;
-}
-
-@keyframes spin {
-  0% {
-    transform: rotate(0deg);
-  }
-  100% {
-    transform: rotate(360deg);
-  }
-}
 .no-data {
   text-align: center;
-  font-size: 18px;
+  font-size: 1.5rem;
   font-weight: bold;
   color: #555;
-  margin-top: 20px;
+  padding-top: 24px;
 }
-
-.calls-table {
+.table {
+  padding: 24px 40px 24px 40px;
+  margin-top: 1rem;
+  margin-bottom: 7.5rem;
   width: 95%;
-  margin: 1.5rem 0 0 2.5rem;
-  border-collapse: collapse;
-  background: white;
   border-radius: 8px;
+  box-shadow: 0px 4px 5px 0px #E9EDF3;
+  background-color: white;
+}
+.calls-table {
+  width: 100%;
+  border-collapse: collapse;
+  background-color: white;
   overflow: hidden;
   font-size: 0.875rem;
   color: #333;
@@ -94,17 +82,20 @@ audio {
 
 .excellent {
   background: #e3fcef;
-  color: #22c55e;
+  border: 1px solid #28A879;
+  color: #28A879;
 }
 
 .good {
-  background: #eef2ff;
-  color: #6366f1;
+  background: #D8E4FB;
+  border: 1px solid #ADBFDF;
+  color: #122945;
 }
 
 .bad {
   background: #fde8e8;
-  color: #ef4444;
+  border: 1px solid #EA1A4F;
+  color: #EA1A4F;
 }
 
 .calls-table td:nth-child(3) {
