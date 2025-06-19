@@ -1,40 +1,29 @@
-import { useState } from "react";
-import "../../styles/dropDown.css";
-import arrowIcon from "../../assets/markup.svg";
+import DropDownType from "./DropDownType";
+import DatePicker from "./DatePicker";
 
-export default function Dropdown({ options, selected, onChange }) {
-  const [isOpen, setIsOpen] = useState(false);
+export default function DropDown(props) {
+  if (props.type === "type") {
+    return (
+      <DropDownType
+        options={props.options}
+        selected={props.selected}
+        onChange={props.onChange}
+      />
+    );
+  }
 
-  const handleSelect = (option) => {
-    onChange(option);
-    setIsOpen(false);
-  };
+  if (props.type === "date") {
+    return (
+      <DatePicker
+        selectedRange={props.selectedRange}
+        setSelectedRange={props.setSelectedRange}
+        startDate={props.startDate}
+        endDate={props.endDate}
+        setStartDate={props.setStartDate}
+        setEndDate={props.setEndDate}
+      />
+    );
+  }
 
-  return (
-    <div className="dropdown">
-      <div className="dropdown-toggle" onClick={() => setIsOpen(!isOpen)}>
-        {selected}
-        <img
-          src={arrowIcon}
-          alt="arrow"
-          className={`arrow ${isOpen ? "up" : ""}`}
-        />
-      </div>
-      {isOpen && (
-        <div className="dropdown-menu">
-          {options.map((option) => (
-            <div
-              key={option.value}
-              className={`dropdown-item ${
-                selected === option.value ? "selected" : ""
-              }`}
-              onClick={() => handleSelect(option)}
-            >
-              {option.label}
-            </div>
-          ))}
-        </div>
-      )}
-    </div>
-  );
+  return null;
 }
